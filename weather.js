@@ -43,7 +43,7 @@ function formatParams( params ){
           .join("&")
   }
 
-url="http://data.rcc-acis.org/StnData?"+formatParams(params)
+url="https://data.rcc-acis.org/StnData?"+formatParams(params)
 let request = new XMLHttpRequest();
 request.open("GET",url);
 request.send();
