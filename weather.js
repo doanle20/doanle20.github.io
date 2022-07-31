@@ -3,7 +3,7 @@ console.log("I'm still running");
 if ((~"current" in window.localStorage)){
     window.localStorage["current"]="2022-02-20"
 }
-if (window.localStorage['current']=""){
+if (window.localStorage['current'].length!=10){
     window.localStorage["current"]="2022-02-20"
 }
 date_input=document.getElementById("date_input")
