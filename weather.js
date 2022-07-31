@@ -3,6 +3,9 @@ console.log("I'm still running");
 if ((~"current" in window.localStorage)){
     window.localStorage["current"]="2022-02-20"
 }
+if (window.localStorage['current']=""){
+    window.localStorage["current"]="2022-02-20"
+}
 date_input=document.getElementById("date_input")
 date_input.value=window.localStorage["current"]
 console.log("updated input")
