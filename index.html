@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>Doan's Temperature Blanket</title>
+
+<style>
+    body{
+        font-family: Gill Sans, sans-serif;
+        font-style: normal
+    }
+    #current{
+        font-weight: bold;
+    }
+    #next{
+        display: block;
+        height:40px;
+        width: 80px;
+        font-size: 20px;
+        font-family: Gill Sans, sans-serif;
+    }
+    #date_input{
+        font-size: 20px;
+        font-family: Gill Sans, sans-serif;
+    }
+    table{
+        width: 100%;
+        text-align: left;
+        border-collapse: collapse;
+    }
+    td,th{
+        border-bottom: 1px solid;
+    }
+    #current{
+        border:2px solid;
+    }
+
+</style>
+
+<body>
+<div id="header">
+<h1>Doan's Temperature Blanket</h1>
+<label for="date_input">Currently working on </label>
+<input id="date_input" type="date">
+<button id="next" type="button">Next</button>
+</div>
+
+
+<table id="temp_table">
+<tr>
+    <th style="width:30%">Date</th>
+    <th style="width:30%">Max Temperature</th>
+    <th>Color</th>
+</tr>
+
+
+</table>
+<script src="weather.js"></script>
+</body>
+</html>
