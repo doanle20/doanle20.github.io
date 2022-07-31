@@ -5,6 +5,7 @@ if ((~"current" in window.localStorage)){
 }
 date_input=document.getElementById("date_input")
 date_input.value=window.localStorage["current"]
+console.log("updated input")
 update()
 
 date_input.addEventListener('change',function(e){
