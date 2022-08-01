@@ -5,8 +5,8 @@ console.log("I'm still running");
 const DATE_INPUT=document.getElementById("date_input");
 const DAYS_BEFORE = 15;
 const DAYS_AFTER = 5;
-const TEMP_LIMITS=[50,65,75,85,95,100];
-const COLOR=['#cce4ff',"#3d8de3","#45bf9b","#f2e766","#f59b42","#e6714e","#e3ba98"];
+const TEMP_LIMITS=[50,65,80,95,100];
+const COLOR=['#cce4ff',"#3d8de3","#45bf9b","#f5c542","#f57e42","#e3ba98"];
 
 test_date= new Date(window.localStorage["current"]);
 if (test_date=="Invalid Date"){
