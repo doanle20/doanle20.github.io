@@ -2,31 +2,37 @@
 console.log("I'm still running");
 
 // Initialization
-if (!("current" in window.localStorage)){
-    window.localStorage["current"]="2022-02-20"
-}else if(window.localStorage['current'].length!=10){
-    window.localStorage["current"]="2022-02-20"
+const DATE_INPUT=document.getElementById("date_input");
+const DAYS_BEFORE = 15;
+const DAYS_AFTER = 5;
+const TEMP_LIMITS=[50,65,75,85,95,100];
+const COLOR=['#cce4ff',"#3d8de3","#45bf9b","#f2e766","#f59b42","#e6714e","#e3ba98"];
+
+test_date= new Date(window.localStorage["current"]);
+if (test_date=="Invalid Date"){
+    DATE_INPUT.value="2022-02-20"
+}else{
+    DATE_INPUT.value=window.localStorage["current"];
 }
-date_input=document.getElementById("date_input")
-date_input.value=window.localStorage["current"]
-update(date_input.value,5,5)
+update();
 
 //Event Listeners
-date_input.addEventListener('change',function(e){
-    update(date_input.value,5,5);
+DATE_INPUT.addEventListener('change',function(e){
+    update();
 });
 document.getElementById("next").addEventListener('click', function(e){
-    date_input.value=adjustDays(date_input.value,1);
-    update(date_input.value,5,5);
+    DATE_INPUT.value=adjustDays(DATE_INPUT.value,1);
+    update();
 })
 
 //Functions
-function update(current,days_before,days_after){
-    window.localStorage["current"]=current
-    start=adjustDays(current,-1*days_before);
-    end=adjustDays(current,days_after);
+function update(){
+    const current=DATE_INPUT.value;
+    window.localStorage["current"]=current;
+    const start=adjustDays(current,-1*DAYS_BEFORE);
+    const end=adjustDays(current,DAYS_AFTER);
 
-    params={"sid":"414300","sdate":start,"edate":end,"elems":"maxt"};
+    const params={"sid":"414300","sdate":start,"edate":end,"elems":"maxt"};
     
     function formatParams( params ){
         return Object
@@ -40,7 +46,7 @@ function update(current,days_before,days_after){
     fetch("https://data.rcc-acis.org/StnData?"+formatParams(params))
         .then(response=>response.text())
         .then(function(text){
-            result=JSON.parse(text);
+            const result=JSON.parse(text);
             const table = document.getElementById("temp_table")
             while (table.rows.length>1){
                 table.deleteRow(1);
@@ -54,7 +60,7 @@ function update(current,days_before,days_after){
         });
 }
 function adjustDays(date,days){
-    result=new Date(date);
+    let result=new Date(date);
     result.setDate(result.getDate()+days);
     result=result.toJSON().slice(0,10);
     return result;
@@ -91,13 +97,12 @@ function selectColor(temp){
     }
     temp=parseInt(temp)
     
-    temp_limits=[50,65,75,85,95,100];
-    color=['#cce4ff',"#3d8de3","#45bf9b","#f2e766","#f59b42","#e6714e","#e3ba98"];
-    for(var t in temp_limits){
-        if (temp<temp_limits[t]){
-            return color[t]
+
+    for(var t in TEMP_LIMITS){
+        if (temp<TEMP_LIMITS[t]){
+            return COLOR[t]
         }
     }
-    return color[color.length-1]
+    return COLOR[COLOR.length-1]
   };
 
