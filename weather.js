@@ -1,7 +1,7 @@
 
 console.log("I'm still running");
-window.localStorage['current']=null
-console.log(!("current" in window.localStorage))
+
+// Initialization
 if (!("current" in window.localStorage)){
     window.localStorage["current"]="2022-02-20"
 }else if(window.localStorage['current'].length!=10){
@@ -9,65 +9,55 @@ if (!("current" in window.localStorage)){
 }
 date_input=document.getElementById("date_input")
 date_input.value=window.localStorage["current"]
-console.log("updated input")
-update()
+update(date_input.value,5,5)
 
+//Event Listeners
 date_input.addEventListener('change',function(e){
-    update();
+    update(date_input.value,5,5);
 });
 document.getElementById("next").addEventListener('click', function(e){
     date_input.value=adjustDays(date_input.value,1);
-    update();
+    update(date_input.value,5,5);
 })
-function update(){
-    window.localStorage["current"]=date_input.value
-    getData(date_input.value,5,5)
+
+//Functions
+function update(current,days_before,days_after){
+    window.localStorage["current"]=current
+    start=adjustDays(current,-1*days_before);
+    end=adjustDays(current,days_after);
+
+    params={"sid":"414300","sdate":start,"edate":end,"elems":"maxt"};
+    
+    function formatParams( params ){
+        return Object
+            .keys(params)
+            .map(function(key){
+                return key+"="+encodeURIComponent(params[key])
+            })
+            .join("&")
+    }   
+
+    fetch("https://data.rcc-acis.org/StnData?"+formatParams(params))
+        .then(response=>response.text())
+        .then(function(text){
+            result=JSON.parse(text);
+            const table = document.getElementById("temp_table")
+            while (table.rows.length>1){
+                table.deleteRow(1);
+            }
+            for (let i=result.data.length-1;i>=0;i--){
+                document.getElementById("temp_table").appendChild(addRow(result.data[i][0],result.data[i][1],current));
+            }
+        })
+        .catch(error => {
+            console.log("hi")
+        });
 }
 function adjustDays(date,days){
     result=new Date(date);
     result.setDate(result.getDate()+days);
     result=result.toJSON().slice(0,10);
     return result;
-
-}
-function getData(current,days_before,days_after){
-start=adjustDays(current,-1*days_before);
-end=adjustDays(current,days_after);
-
-params={"sid":"414300","sdate":start,"edate":end,"elems":"maxt"};
-function formatParams( params ){
-    return Object
-          .keys(params)
-          .map(function(key){
-            return key+"="+encodeURIComponent(params[key])
-          })
-          .join("&")
-  }
-
-url="https://data.rcc-acis.org/StnData?"+formatParams(params)
-let request = new XMLHttpRequest();
-request.open("GET",url);
-request.send();
-request.onload = function() {
-    if (request.status != 200) { // analyze HTTP status of the response
-        console.log(`Error ${request.status}: ${request.statusText}`); // e.g. 404: Not Found
-    } 
-    else { // show the result
-        result=JSON.parse(request.response);
-        writeTable(current,result);
-
-    }
-  };
-};
-
-function writeTable(current,result){
-    const table = document.getElementById("temp_table")
-    while (table.rows.length>1){
-        table.deleteRow(1);
-    }
-    for (let i=result.data.length-1;i>=0;i--){
-        document.getElementById("temp_table").appendChild(addRow(result.data[i][0],result.data[i][1],current));
-    }
 }
 
 function addRow(date,temp,current){
@@ -81,7 +71,7 @@ function addRow(date,temp,current){
     }
     return row;
 
-  }
+  };
 function addCell(type,text){
     const cell = document.createElement("td");
 
@@ -94,7 +84,7 @@ function addCell(type,text){
     
     cell.setAttribute("class",type);
     return cell
-}
+};
 function selectColor(temp){
     if (temp=="M"){
         return "gray"
@@ -109,5 +99,5 @@ function selectColor(temp){
         }
     }
     return color[color.length-1]
-  }
+  };
 
